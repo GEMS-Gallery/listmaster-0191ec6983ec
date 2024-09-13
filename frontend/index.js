@@ -9,13 +9,13 @@ const categoriesContainer = document.getElementById('categories-container');
 async function loadItems() {
     const items = await backend.getItems();
     shoppingList.innerHTML = '';
-    items.forEach(item => {
-        const li = createItemElement(item);
+    for (const item of items) {
+        const li = await createItemElement(item);
         shoppingList.appendChild(li);
-    });
+    }
 }
 
-function createItemElement(item) {
+async function createItemElement(item) {
     const li = document.createElement('li');
     li.className = `shopping-item ${item.completed ? 'completed' : ''}`;
     li.innerHTML = `
@@ -46,7 +46,7 @@ async function loadCategories() {
     categorySelect.innerHTML = '<option value="">Select Category</option>';
     categoriesContainer.innerHTML = '';
 
-    categories.forEach(category => {
+    for (const category of categories) {
         const option = document.createElement('option');
         option.value = category.name;
         option.textContent = category.name;
@@ -57,7 +57,10 @@ async function loadCategories() {
         categoryDiv.innerHTML = `
             <h3><span class="category-icon">${category.icon}</span>${category.name}</h3>
             <ul>
-                ${category.items.map(item => `<li><span class="item-icon">${backend.getItemIcon(item)}</span>${item}</li>`).join('')}
+                ${await Promise.all(category.items.map(async (item) => {
+                    const icon = await backend.getItemIcon(item);
+                    return `<li><span class="item-icon">${icon}</span>${item}</li>`;
+                })).then(items => items.join(''))}
             </ul>
         `;
         categoriesContainer.appendChild(categoryDiv);
@@ -68,7 +71,7 @@ async function loadCategories() {
                 categorySelect.value = category.name;
             });
         });
-    });
+    }
 }
 
 addItemForm.addEventListener('submit', async (e) => {
@@ -80,7 +83,7 @@ addItemForm.addEventListener('submit', async (e) => {
         const icon = await backend.getItemIcon(text);
         const id = await backend.addItem(text, category);
         const item = { id, text, completed: false, category, icon };
-        const li = createItemElement(item);
+        const li = await createItemElement(item);
         shoppingList.appendChild(li);
         newItemInput.value = '';
         categorySelect.value = '';
