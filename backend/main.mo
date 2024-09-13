@@ -1,4 +1,5 @@
 import Bool "mo:base/Bool";
+import Func "mo:base/Func";
 
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
@@ -13,26 +14,55 @@ actor {
     text: Text;
     completed: Bool;
     category: Text;
+    icon: Text;
   };
 
   // Define the Category type
   type Category = {
     name: Text;
     items: [Text];
+    icon: Text;
   };
 
   // Stable variable to store shopping items
   stable var items : [ShoppingItem] = [];
   stable var nextId : Nat = 0;
 
-  // Predefined categories with items
+  // Predefined categories with items and icons
   let categories : [Category] = [
-    { name = "Produce"; items = ["Apples", "Bananas", "Carrots", "Lettuce"] },
-    { name = "Bakery"; items = ["Bread", "Muffins", "Bagels", "Croissants"] },
-    { name = "Dairy"; items = ["Milk", "Cheese", "Yogurt", "Butter"] },
-    { name = "Meat"; items = ["Chicken", "Beef", "Pork", "Fish"] },
-    { name = "Pantry"; items = ["Rice", "Pasta", "Canned Tomatoes", "Cereal"] }
+    { name = "Produce"; items = ["Apples", "Bananas", "Carrots", "Lettuce"]; icon = "🥬" },
+    { name = "Bakery"; items = ["Bread", "Muffins", "Bagels", "Croissants"]; icon = "🍞" },
+    { name = "Dairy"; items = ["Milk", "Cheese", "Yogurt", "Butter"]; icon = "🥛" },
+    { name = "Meat"; items = ["Chicken", "Beef", "Pork", "Fish"]; icon = "🍗" },
+    { name = "Pantry"; items = ["Rice", "Pasta", "Canned Tomatoes", "Cereal"]; icon = "🥫" }
   ];
+
+  // Function to get icon for an item
+  func getItemIcon(item: Text) : Text {
+    switch (item) {
+      case "Apples" "🍎";
+      case "Bananas" "🍌";
+      case "Carrots" "🥕";
+      case "Lettuce" "🥬";
+      case "Bread" "🍞";
+      case "Muffins" "🧁";
+      case "Bagels" "🥯";
+      case "Croissants" "🥐";
+      case "Milk" "🥛";
+      case "Cheese" "🧀";
+      case "Yogurt" "🍶";
+      case "Butter" "🧈";
+      case "Chicken" "🍗";
+      case "Beef" "🥩";
+      case "Pork" "🍖";
+      case "Fish" "🐟";
+      case "Rice" "🍚";
+      case "Pasta" "🍝";
+      case "Canned Tomatoes" "🥫";
+      case "Cereal" "🥣";
+      case _ "🛒";
+    }
+  };
 
   // Add a new item to the shopping list
   public func addItem(text: Text, category: Text) : async Nat {
@@ -43,6 +73,7 @@ actor {
       text = text;
       completed = false;
       category = category;
+      icon = getItemIcon(text);
     };
     items := Array.append(items, [newItem]);
     id
@@ -57,6 +88,7 @@ actor {
           text = item.text;
           completed = not item.completed;
           category = item.category;
+          icon = item.icon;
         };
       };
       item

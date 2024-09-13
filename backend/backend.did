@@ -2,11 +2,13 @@ type ShoppingItem =
  record {
    category: text;
    completed: bool;
+   icon: text;
    id: nat;
    "text": text;
  };
 type Category = 
  record {
+   icon: text;
    items: vec text;
    name: text;
  };

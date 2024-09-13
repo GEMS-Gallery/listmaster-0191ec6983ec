@@ -136,6 +136,11 @@ button:hover {
     background-color: #c0392b;
 }
 
+.item-icon, .category-icon {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
 @media (max-width: 600px) {
     #add-item-form {
         flex-direction: column;

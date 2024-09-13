@@ -19,6 +19,7 @@ function createItemElement(item) {
     const li = document.createElement('li');
     li.className = `shopping-item ${item.completed ? 'completed' : ''}`;
     li.innerHTML = `
+        <span class="item-icon">${item.icon}</span>
         <input type="checkbox" ${item.completed ? 'checked' : ''}>
         <span>${item.text}</span>
         <small>(${item.category})</small>
@@ -54,20 +55,32 @@ async function loadCategories() {
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category';
         categoryDiv.innerHTML = `
-            <h3>${category.name}</h3>
+            <h3><span class="category-icon">${category.icon}</span>${category.name}</h3>
             <ul>
-                ${category.items.map(item => `<li>${item}</li>`).join('')}
+                ${category.items.map(item => `<li><span class="item-icon">${getItemIcon(item)}</span>${item}</li>`).join('')}
             </ul>
         `;
         categoriesContainer.appendChild(categoryDiv);
 
         categoryDiv.querySelectorAll('li').forEach(li => {
             li.addEventListener('click', () => {
-                newItemInput.value = li.textContent;
+                newItemInput.value = li.textContent.trim();
                 categorySelect.value = category.name;
             });
         });
     });
+}
+
+function getItemIcon(item) {
+    // This function should match the logic in the backend's getItemIcon function
+    const iconMap = {
+        "Apples": "🍎", "Bananas": "🍌", "Carrots": "🥕", "Lettuce": "🥬",
+        "Bread": "🍞", "Muffins": "🧁", "Bagels": "🥯", "Croissants": "🥐",
+        "Milk": "🥛", "Cheese": "🧀", "Yogurt": "🍶", "Butter": "🧈",
+        "Chicken": "🍗", "Beef": "🥩", "Pork": "🍖", "Fish": "🐟",
+        "Rice": "🍚", "Pasta": "🍝", "Canned Tomatoes": "🥫", "Cereal": "🥣"
+    };
+    return iconMap[item] || "🛒";
 }
 
 addItemForm.addEventListener('submit', async (e) => {
@@ -76,7 +89,7 @@ addItemForm.addEventListener('submit', async (e) => {
     const category = categorySelect.value;
     if (text && category) {
         const id = await backend.addItem(text, category);
-        const item = { id, text, completed: false, category };
+        const item = { id, text, completed: false, category, icon: getItemIcon(text) };
         const li = createItemElement(item);
         shoppingList.appendChild(li);
         newItemInput.value = '';

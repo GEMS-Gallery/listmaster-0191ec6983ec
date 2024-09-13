@@ -1,10 +1,12 @@
 export const idlFactory = ({ IDL }) => {
   const Category = IDL.Record({
+    'icon' : IDL.Text,
     'name' : IDL.Text,
     'items' : IDL.Vec(IDL.Text),
   });
   const ShoppingItem = IDL.Record({
     'id' : IDL.Nat,
+    'icon' : IDL.Text,
     'text' : IDL.Text,
     'completed' : IDL.Bool,
     'category' : IDL.Text,
