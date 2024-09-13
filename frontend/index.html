@@ -12,8 +12,12 @@
         <h1>Shopping List</h1>
         <form id="add-item-form">
             <input type="text" id="new-item" placeholder="Add a new item" required>
+            <select id="category-select">
+                <option value="">Select Category</option>
+            </select>
             <button type="submit"><i class="fas fa-plus"></i> Add Item</button>
         </form>
+        <div id="categories-container"></div>
         <ul id="shopping-list"></ul>
     </div>
     <script type="module" src="index.js"></script>

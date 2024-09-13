@@ -28,12 +28,20 @@ h1 {
     margin-bottom: 20px;
 }
 
-#new-item {
+#new-item, #category-select {
     flex-grow: 1;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
+}
+
+#new-item {
     border-radius: 4px 0 0 4px;
+}
+
+#category-select {
+    border-radius: 0;
+    border-left: none;
 }
 
 button {
@@ -49,6 +57,38 @@ button {
 
 button:hover {
     background-color: #2980b9;
+}
+
+#categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category {
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.category h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.category ul {
+    list-style-type: none;
+}
+
+.category li {
+    cursor: pointer;
+    padding: 5px 0;
+    transition: color 0.3s;
+}
+
+.category li:hover {
+    color: #3498db;
 }
 
 #shopping-list {
@@ -101,9 +141,13 @@ button:hover {
         flex-direction: column;
     }
 
-    #new-item, button {
+    #new-item, #category-select, button {
         width: 100%;
         margin-bottom: 10px;
         border-radius: 4px;
+    }
+
+    #category-select {
+        border-left: 1px solid #ddd;
     }
 }
