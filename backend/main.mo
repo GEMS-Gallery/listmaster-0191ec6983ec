@@ -37,8 +37,8 @@ actor {
     { name = "Pantry"; items = ["Rice", "Pasta", "Canned Tomatoes", "Cereal"]; icon = "🥫" }
   ];
 
-  // Function to get icon for an item
-  func getItemIcon(item: Text) : Text {
+  // Function to get icon for an item (Query call)
+  public query func getItemIcon(item: Text) : async Text {
     switch (item) {
       case "Apples" "🍎";
       case "Bananas" "🍌";
@@ -64,22 +64,36 @@ actor {
     }
   };
 
-  // Add a new item to the shopping list
+  // Function to validate item and category (Query call)
+  public query func validateItem(text: Text, category: Text) : async Bool {
+    if (Text.size(text) == 0 or Text.size(category) == 0) {
+      return false;
+    };
+    for (cat in categories.vals()) {
+      if (cat.name == category) {
+        return true;
+      };
+    };
+    false
+  };
+
+  // Add a new item to the shopping list (Update call)
   public func addItem(text: Text, category: Text) : async Nat {
     let id = nextId;
     nextId += 1;
+    let icon = await getItemIcon(text);
     let newItem : ShoppingItem = {
       id = id;
       text = text;
       completed = false;
       category = category;
-      icon = getItemIcon(text);
+      icon = icon;
     };
     items := Array.append(items, [newItem]);
     id
   };
 
-  // Toggle the completion status of an item
+  // Toggle the completion status of an item (Update call)
   public func toggleItem(id: Nat) : async Bool {
     items := Array.map<ShoppingItem, ShoppingItem>(items, func (item) {
       if (item.id == id) {
@@ -96,7 +110,7 @@ actor {
     true
   };
 
-  // Delete an item from the shopping list
+  // Delete an item from the shopping list (Update call)
   public func deleteItem(id: Nat) : async Bool {
     let newItems = Array.filter<ShoppingItem>(items, func (item) {
       item.id != id
@@ -109,12 +123,12 @@ actor {
     }
   };
 
-  // Get all items in the shopping list
+  // Get all items in the shopping list (Query call)
   public query func getItems() : async [ShoppingItem] {
     items
   };
 
-  // Get all categories with their predefined items
+  // Get all categories with their predefined items (Query call)
   public query func getCategories() : async [Category] {
     categories
   };

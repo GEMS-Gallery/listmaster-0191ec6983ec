@@ -15,8 +15,10 @@ export const idlFactory = ({ IDL }) => {
     'addItem' : IDL.Func([IDL.Text, IDL.Text], [IDL.Nat], []),
     'deleteItem' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'getCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
+    'getItemIcon' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
     'getItems' : IDL.Func([], [IDL.Vec(ShoppingItem)], ['query']),
     'toggleItem' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+    'validateItem' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], ['query']),
   });
 };
 export const init = ({ IDL }) => { return []; };

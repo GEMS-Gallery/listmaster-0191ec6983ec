@@ -18,8 +18,10 @@ export interface _SERVICE {
   'addItem' : ActorMethod<[string, string], bigint>,
   'deleteItem' : ActorMethod<[bigint], boolean>,
   'getCategories' : ActorMethod<[], Array<Category>>,
+  'getItemIcon' : ActorMethod<[string], string>,
   'getItems' : ActorMethod<[], Array<ShoppingItem>>,
   'toggleItem' : ActorMethod<[bigint], boolean>,
+  'validateItem' : ActorMethod<[string, string], boolean>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

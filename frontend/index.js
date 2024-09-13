@@ -57,7 +57,7 @@ async function loadCategories() {
         categoryDiv.innerHTML = `
             <h3><span class="category-icon">${category.icon}</span>${category.name}</h3>
             <ul>
-                ${category.items.map(item => `<li><span class="item-icon">${getItemIcon(item)}</span>${item}</li>`).join('')}
+                ${category.items.map(item => `<li><span class="item-icon">${backend.getItemIcon(item)}</span>${item}</li>`).join('')}
             </ul>
         `;
         categoriesContainer.appendChild(categoryDiv);
@@ -71,29 +71,21 @@ async function loadCategories() {
     });
 }
 
-function getItemIcon(item) {
-    // This function should match the logic in the backend's getItemIcon function
-    const iconMap = {
-        "Apples": "🍎", "Bananas": "🍌", "Carrots": "🥕", "Lettuce": "🥬",
-        "Bread": "🍞", "Muffins": "🧁", "Bagels": "🥯", "Croissants": "🥐",
-        "Milk": "🥛", "Cheese": "🧀", "Yogurt": "🍶", "Butter": "🧈",
-        "Chicken": "🍗", "Beef": "🥩", "Pork": "🍖", "Fish": "🐟",
-        "Rice": "🍚", "Pasta": "🍝", "Canned Tomatoes": "🥫", "Cereal": "🥣"
-    };
-    return iconMap[item] || "🛒";
-}
-
 addItemForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const text = newItemInput.value.trim();
     const category = categorySelect.value;
-    if (text && category) {
+    
+    if (await backend.validateItem(text, category)) {
+        const icon = await backend.getItemIcon(text);
         const id = await backend.addItem(text, category);
-        const item = { id, text, completed: false, category, icon: getItemIcon(text) };
+        const item = { id, text, completed: false, category, icon };
         const li = createItemElement(item);
         shoppingList.appendChild(li);
         newItemInput.value = '';
         categorySelect.value = '';
+    } else {
+        alert('Invalid item or category. Please try again.');
     }
 });
 

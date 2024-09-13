@@ -16,6 +16,8 @@ service : {
   addItem: (text, text) -> (nat);
   deleteItem: (nat) -> (bool);
   getCategories: () -> (vec Category) query;
+  getItemIcon: (text) -> (text) query;
   getItems: () -> (vec ShoppingItem) query;
   toggleItem: (nat) -> (bool);
+  validateItem: (text, text) -> (bool) query;
 }
