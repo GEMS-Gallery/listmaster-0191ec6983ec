@@ -15,12 +15,14 @@ export interface ShoppingItem {
   'category' : string,
 }
 export interface _SERVICE {
-  'addItem' : ActorMethod<[string, string], bigint>,
-  'deleteItem' : ActorMethod<[bigint], boolean>,
+  'addItemToCart' : ActorMethod<[string, string, string], bigint>,
+  'clearCart' : ActorMethod<[], boolean>,
+  'deleteCartItem' : ActorMethod<[bigint], boolean>,
+  'getCartItems' : ActorMethod<[], Array<ShoppingItem>>,
   'getCategories' : ActorMethod<[], Array<Category>>,
   'getItemIcon' : ActorMethod<[string], string>,
-  'getItems' : ActorMethod<[], Array<ShoppingItem>>,
-  'toggleItem' : ActorMethod<[bigint], boolean>,
+  'saveCart' : ActorMethod<[], boolean>,
+  'toggleCartItem' : ActorMethod<[bigint], boolean>,
   'validateItem' : ActorMethod<[string, string], boolean>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

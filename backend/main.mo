@@ -25,7 +25,8 @@ actor {
   };
 
   // Stable variable to store shopping items
-  stable var items : [ShoppingItem] = [];
+  stable var persistentItems : [ShoppingItem] = [];
+  var temporaryCart : [ShoppingItem] = [];
   stable var nextId : Nat = 0;
 
   // Predefined categories with items and icons
@@ -77,11 +78,10 @@ actor {
     false
   };
 
-  // Add a new item to the shopping list (Update call)
-  public func addItem(text: Text, category: Text) : async Nat {
+  // Add a new item to the temporary cart (Query call)
+  public query func addItemToCart(text: Text, category: Text, icon: Text) : async Nat {
     let id = nextId;
     nextId += 1;
-    let icon = await getItemIcon(text);
     let newItem : ShoppingItem = {
       id = id;
       text = text;
@@ -89,13 +89,13 @@ actor {
       category = category;
       icon = icon;
     };
-    items := Array.append(items, [newItem]);
+    temporaryCart := Array.append(temporaryCart, [newItem]);
     id
   };
 
-  // Toggle the completion status of an item (Update call)
-  public func toggleItem(id: Nat) : async Bool {
-    items := Array.map<ShoppingItem, ShoppingItem>(items, func (item) {
+  // Toggle the completion status of an item in the temporary cart (Query call)
+  public query func toggleCartItem(id: Nat) : async Bool {
+    temporaryCart := Array.map<ShoppingItem, ShoppingItem>(temporaryCart, func (item) {
       if (item.id == id) {
         return {
           id = item.id;
@@ -110,22 +110,34 @@ actor {
     true
   };
 
-  // Delete an item from the shopping list (Update call)
-  public func deleteItem(id: Nat) : async Bool {
-    let newItems = Array.filter<ShoppingItem>(items, func (item) {
+  // Delete an item from the temporary cart (Query call)
+  public query func deleteCartItem(id: Nat) : async Bool {
+    let newItems = Array.filter<ShoppingItem>(temporaryCart, func (item) {
       item.id != id
     });
-    if (newItems.size() < items.size()) {
-      items := newItems;
+    if (newItems.size() < temporaryCart.size()) {
+      temporaryCart := newItems;
       true
     } else {
       false
     }
   };
 
-  // Get all items in the shopping list (Query call)
-  public query func getItems() : async [ShoppingItem] {
-    items
+  // Get all items in the temporary cart (Query call)
+  public query func getCartItems() : async [ShoppingItem] {
+    temporaryCart
+  };
+
+  // Save the temporary cart to persistent storage (Update call)
+  public func saveCart() : async Bool {
+    persistentItems := temporaryCart;
+    true
+  };
+
+  // Clear the temporary cart (Query call)
+  public query func clearCart() : async Bool {
+    temporaryCart := [];
+    true
   };
 
   // Get all categories with their predefined items (Query call)

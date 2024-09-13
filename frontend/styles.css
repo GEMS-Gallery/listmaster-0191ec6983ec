@@ -93,6 +93,7 @@ button:hover {
 
 #shopping-list {
     list-style-type: none;
+    margin-bottom: 20px;
 }
 
 .shopping-item {
@@ -139,6 +140,19 @@ button:hover {
 .item-icon, .category-icon {
     margin-right: 10px;
     font-size: 1.2em;
+}
+
+#save-cart-btn, #clear-cart-btn {
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+#clear-cart-btn {
+    background-color: #e74c3c;
+}
+
+#clear-cart-btn:hover {
+    background-color: #c0392b;
 }
 
 @media (max-width: 600px) {

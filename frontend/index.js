@@ -5,9 +5,11 @@ const addItemForm = document.getElementById('add-item-form');
 const newItemInput = document.getElementById('new-item');
 const categorySelect = document.getElementById('category-select');
 const categoriesContainer = document.getElementById('categories-container');
+const saveCartBtn = document.getElementById('save-cart-btn');
+const clearCartBtn = document.getElementById('clear-cart-btn');
 
-async function loadItems() {
-    const items = await backend.getItems();
+async function loadCartItems() {
+    const items = await backend.getCartItems();
     shoppingList.innerHTML = '';
     for (const item of items) {
         const li = await createItemElement(item);
@@ -28,13 +30,13 @@ async function createItemElement(item) {
 
     const checkbox = li.querySelector('input[type="checkbox"]');
     checkbox.addEventListener('change', async () => {
-        await backend.toggleItem(item.id);
+        await backend.toggleCartItem(item.id);
         li.classList.toggle('completed');
     });
 
     const deleteBtn = li.querySelector('.delete-btn');
     deleteBtn.addEventListener('click', async () => {
-        await backend.deleteItem(item.id);
+        await backend.deleteCartItem(item.id);
         li.remove();
     });
 
@@ -81,7 +83,7 @@ addItemForm.addEventListener('submit', async (e) => {
     
     if (await backend.validateItem(text, category)) {
         const icon = await backend.getItemIcon(text);
-        const id = await backend.addItem(text, category);
+        const id = await backend.addItemToCart(text, category, icon);
         const item = { id, text, completed: false, category, icon };
         const li = await createItemElement(item);
         shoppingList.appendChild(li);
@@ -92,7 +94,26 @@ addItemForm.addEventListener('submit', async (e) => {
     }
 });
 
+saveCartBtn.addEventListener('click', async () => {
+    const saved = await backend.saveCart();
+    if (saved) {
+        alert('Cart saved successfully!');
+    } else {
+        alert('Failed to save cart. Please try again.');
+    }
+});
+
+clearCartBtn.addEventListener('click', async () => {
+    const cleared = await backend.clearCart();
+    if (cleared) {
+        shoppingList.innerHTML = '';
+        alert('Cart cleared successfully!');
+    } else {
+        alert('Failed to clear cart. Please try again.');
+    }
+});
+
 window.addEventListener('load', async () => {
     await loadCategories();
-    await loadItems();
+    await loadCartItems();
 });
